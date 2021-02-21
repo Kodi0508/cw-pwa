@@ -3,9 +3,9 @@
     "description": "Online Activity Store",
     "icons": [
     {
-        "src": "French.jpg",
-        "sizes": "276x182",
-        "type": "image/jpg"
+        "src": "icon-512.png",
+        "sizes": "512x512",
+        "type": "png"
     }
     ],
     "start-url": "https://kodi0508.github.io/cw-pwa/IndividualCoursework-1.html",
