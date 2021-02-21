@@ -5,7 +5,7 @@
     {
         "src": "French.jpg",
         "sizes": "276x182",
-        "type": "jpg"
+        "type": "image/jpg"
     }
     ],
     "start-url": "https://kodi0508.github.io/cw-pwa/IndividualCoursework-1.html",
