@@ -5,7 +5,7 @@ var cacheFiles = [
     'cw1.webmanifest',
     'French.jpg',
     'Book.jpg',
-    'Spanish.jpg',
+    'Spanish.png',
     'Sports.jpg',
     'Theatre.jpg',
     'Geography.jpg',
