@@ -1,0 +1,15 @@
+{
+    "name": "After Class Activity",
+    "description": "Online Activity Store",
+    "icons": [
+    {
+        "src": "French.jpg",
+        "sizes": "276x182",
+        "type": "jpg"
+    }
+    ],
+    "start-url": "IndividualCoursework-1.html",
+    "display": "fullscreen",
+    "background_color": "#B12A34"
+
+}

@@ -1,0 +1,279 @@
+<html>
+
+<head>
+    <title>ClubTime</title>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="products.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="manifest" href="cw1.webmanifest">
+    <style>
+        .product{
+            border: 1px grey solid;
+            padding: 20px;
+            margin: 20px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        if ('serviceWorker' in navigator)
+            {
+                navigator.serviceWorker.register('service-worker.js');
+            };
+    </script>
+</head>
+
+<body style="background-image: url('Wallpaper.png');">
+    <div id="app">
+        <header>
+            <h1 style="font-family:verdana; text-align:center; color: blueviolet;" v-text="sitename" class=""></h1>
+            <div v-if="showProduct">
+
+                <button v-on:click='showCheckout' v-if="cartItemCount > 0" class="btn btn-success">
+                    {{cartItemCount}}
+                    <span class="fas fa-cart-plus"></span> Checkout
+                </button>
+                </div>
+                <div v-else>
+                    <button v-on:click='showCheckout' v-if="cartItemCount>0" class="btn btn-success">
+                        {{cartItemCount}}
+                        <span class="fas fa-shopping-cart"></span> Back To Shopping
+                        </button>
+                </div>
+        </header>
+        <main>
+            <div v-if='showProduct' style="color:blue;">
+                <p style="font-family:verdana;">Category</p>
+                    <div class="form-check">
+                        <input class="btn btn-primary" type="radio" value="title" name="TitleRadio" id="titleR" v-model="picked">
+                        <label class="badge badge-primary" for="titleRadio" style="font-family:verdana;">By Title</label>
+                    </div>
+                    <div class="form-check" style="left: 25px;">
+                        <input class="btn btn-primary" type="radio" value="descTitle" name="orderRadio" id="descT" v-model="picked">
+                        <label class="badge badge-danger" for="descT">↑↓</label>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="btn btn-primary" type="radio" value="price" name="PriceRadio" id="priceR" v-model="picked">
+                        <label class="badge badge-primary" for="priceRadio" style="font-family:verdana;">By Price</label>
+                    </div>
+                    <div class="form-check" style="left: 25px;">
+                        <input class="btn btn-primary" type="radio" value="descPrice" name="orderRadio" id="descP" v-model="picked">
+                        <label class="badge badge-danger" for="descP">↑↓</label>
+                    </div>
+            
+                    <div class="form-check">
+                        <input class="btn btn-primary" type="radio" value="location" name="LocationRadio" id="locationR" v-model="picked">
+                        <label class="badge badge-primary" for="locationRadio" style="font-family:verdana;">By Location</label>
+                    </div>
+                    <div class="form-check" style="left: 25px;">
+                        <input class="btn btn-primary" type="radio" value="descLocation" name="orderRadio" id="descL" v-model="picked">
+                        <label class="badge badge-danger" for="descL">↑↓</label>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="btn btn-primary" type="radio" value="availableInventory" name="SpaceRadio" id="spacesR" v-model="picked">
+                        <label class="badge badge-primary" for="spacesRadio" style="font-family:verdana;">By Spaces</label>
+                    </div>
+                    <div class="form-check" style="left: 25px;">
+                        <input class="btn btn-primary" type="radio" value="descSpace" name="orderRadio" id="descS" v-model="picked">
+                        <label class="badge badge-danger" for="descS">↑↓</label>
+                    </div>
+                    
+                    
+            
+                    
+                <div class="row">
+                <div class="col-md-4 ml-7" v-for="product in sortedProducts">
+                    <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
+                        <img v-bind:src="product.image" class="card-img-top" alt="...">
+                        <div class="card-body">
+                          <h5 class="card-title"  v-text="product.title"></h5>
+                          <p class="card-text">Location: {{product.location}}</p>
+                          <p class="card-text">Price: ${{product.price}}</p>
+                          <p class="card-text">Available stock: {{product.availableInventory - cartCount(product)}}</p>
+                          <button v-on:click='addToCart(product)' v-if='canAddToCart(product)' class="btn btn-info">Add to cart</button>
+            
+                    <button disabled="disabled" v-else class="btn btn-disabled">Add to cart</button>
+            
+                    <span v-if='product.availableInventory === cartCount(product)'>All out!</span>
+                    <span v-else-if="product.availableInventory - cartCount(product) < 5">
+                        Only {{product.availableInventory - cartCount(product)}} left!
+                    </span>
+                    <span v-else>Buy now!</span>
+                        </div>
+                      </div>
+            
+                    
+                    <!-- <button v-on:click="addToCart" 
+                    v-show='canAddToCart'>
+                    Add to cart
+                    </button> -->
+            
+                    
+                </div>
+            </div>
+            </div>  
+
+            <div v-else style="color: blueviolet;">
+                <h2>Checkout</h2>
+            
+                <form>
+                    <div class="form-group">
+                    <p>
+            
+              
+                    <strong>Name:</strong>
+                    <!-- This input field is bound to 'firstName' in the 'order' object -->
+                    <input v-model.trim="order.name" class="form-control" type="text" onkeypress="return (event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)" required />
+                </p>
+                </div>
+                <div class="form-group">
+                <p>
+                    <strong>Phone Number:</strong>
+                    <input v-model.number="order.number" class="form-control" type="tel" @keypress="onlyNumbers" pattern="^\d{10}$" title="Only 10 Digits Are Allowed" required />
+                </p>
+                </div>
+                
+            
+                
+            
+                <h2>Order Information</h2>
+                <p class="input-group-text, alert alert-primary">Name: {{order.name}}</p>
+                <p class="input-group-text, alert alert-primary">Phone Number: {{order.number}}</p>
+                <ul class="list-group list-group-flush">
+                    <li class="card text-white bg-secondary mb-3" v-for="product in cart" style="max-width: 21rem;">
+                        <img v-bind:src="product.image"><br>
+                        {{product.title}}<br>
+                        Price: ${{product.price}}<br>
+                        <button class="btn btn-danger" @click='deleteEvent(product)'>Remove</button>
+                    </li>
+                  </ul>
+                  <button v-on:click="clearShoppingCart" class="btn btn-danger">Clear Cart</button>
+                
+                
+                <button v-on:click="submitForm" v-if="order.name!= '' && order.number!= '' " class="btn btn-success">Place Order</button>
+            </form>
+            
+            </div>
+
+            
+         
+        </main>
+    </div>
+    <script type="text/javascript">
+        var webstore = new Vue({
+            el: '#app',
+            data: {
+                sitename: 'ClubTime',
+                products: products,
+                cart: [],
+                showProduct: true,
+                checked:'',
+                picked:'',
+                order: {
+                    name: '',
+                    number: ''
+                },
+                
+            },
+            // created: function () {
+            //     this.products = allProducts
+            // },
+
+            methods: {
+                addToCart(product) {
+                    this.cart.push(product);
+                    // console.log('adding to cart', product.id)
+                },
+                deleteEvent(product) {
+                    this.cart.splice(this.cart.indexOf(product),1);
+                    this.showProduct= true; 
+                },
+                clearShoppingCart() {
+                    webstore.cart = [];
+                    this.showProduct = true;   
+                },
+                showCheckout() {
+                    // console.log(this.showProduct);
+                    this.showProduct = this.showProduct ? false : true;
+                },
+                submitForm() {
+                    alert('Order submitted!')
+                },
+                canAddToCart(product) {
+                    return product.availableInventory > this.cartCount(product);
+                },
+                cartCount(id) {
+                    let count = 0;
+                    for (let i = 0; i < this.cart.length; i++) {
+                        if (this.cart[i] === id) {
+                            count++;
+                        }
+                    }
+                    return count;
+                },
+                onlyNumbers(event) {      
+                    let keyCode = event.keyCode ? event.keyCode : event.which;
+                    if (keyCode < 48 || keyCode > 58) {
+                    event.preventDefault();
+                    }
+                },
+                
+                
+            },
+            
+            computed: {
+                cartItemCount() {
+                    return this.cart.length;
+                },
+                sortedProducts() {
+                    
+                    if (this.picked === "")
+                    {
+                        return this.products.slice(0);
+                    }    
+                    if(this.picked === "title"){
+                    return products.sort((a,b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0)); 
+                }
+
+                    if(this.picked === "descTitle"){
+                        return products.sort((a, b) => a.title < b.title ? 1 : -1);
+                    }
+
+                    if(this.picked === "price"){
+                    return products.sort((a,b) => (a.price > b.price) ? 1 : ((b.price > a.price) ? -1 : 0)); 
+                    }
+
+                    if(this.picked === "descPrice"){
+                        return products.sort((a, b) => a.price < b.price ? 1 : -1);
+                    }
+
+                    if(this.picked === "location"){
+                    return products.sort((a,b) => (a.location > b.location) ? 1 : ((b.location > a.location) ? -1 : 0)); 
+                    }
+
+                    if(this.picked === "descLocation"){
+                        return products.sort((a, b) => a.location < b.location ? 1 : -1);
+                    }
+
+                    if(this.picked === "availableInventory"){
+                    return products.sort((a,b) => (a.availableInventory > b.availableInventory) ? 1 : ((b.availableInventory > a.availableInventory) ? -1 : 0)); 
+                    }
+
+                    if(this.picked === "descSpace"){
+                        return products.sort((a, b) => a.availableInventory < b.availableInventory ? 1 : -1);
+                    }
+
+                    
+                }
+                // canAddToCart(product) {
+                //     return product.availableInventory > this.cartItemCount;
+                // }
+                
+            },  
+        })
+    </script>
+</body>
+
+</html>
