@@ -13,7 +13,8 @@ var cacheFiles = [
     'Literature.jpg',
     'History.jpg',
     'Cooking.jpg',
-    'Wallpaper.png'
+    'Wallpaper.png',
+    'icon-store-512.png'
 ]
 
 self.addEventListener('install', (e) => {
