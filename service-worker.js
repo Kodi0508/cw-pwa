@@ -15,7 +15,7 @@ var cacheFiles = [
     'Cooking.jpg',
     'Wallpaper.png',
     'icon-store-512.png'
-]
+];
 
 self.addEventListener('install', (e) => {
     console.log('[Service Worker] Install');
